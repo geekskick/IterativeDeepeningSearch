@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Deque;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class StateSpace {
@@ -56,7 +58,7 @@ public class StateSpace {
 	}
 
 	public String serialise(final Deque<SearchNode> solution) {
-		String str = new String();	
+		String str = new String();
 		for (int r = 0; r < grid.length; ++r) {
 			for (int c = 0; c < grid[r].length; ++c) {
 				SearchNode s = new SearchNode(c, r, 0);
@@ -76,6 +78,38 @@ public class StateSpace {
 		}
 		return str;
 	}
-	
+
+	public List<SearchNode> expand(final SearchNode node) {
+		final List<SearchNode> neighbours = new ArrayList<SearchNode>();
+		if (node.getX() > 0) {
+			final SearchNode candidate = new SearchNode(node.getX() - 1,
+					node.getY(), node.getDepth() + 1);
+			if (canMoveTo(candidate)) {
+				neighbours.add(candidate);
+			}
+		}
+		if (node.getY() > 0) {
+			final SearchNode candidate = new SearchNode(node.getX(),
+					node.getY() - 1, node.getDepth() + 1);
+			if (canMoveTo(candidate)) {
+				neighbours.add(candidate);
+			}
+		}
+		if (node.getY() < grid.length - 1) {
+			final SearchNode candidate = new SearchNode(node.getX(),
+					node.getY() + 1, node.getDepth() + 1);
+			if (canMoveTo(candidate)) {
+				neighbours.add(candidate);
+			}
+		}
+		if (node.getX() < grid.length - 1) {
+			final SearchNode candidate = new SearchNode(node.getX() + 1,
+					node.getY(), node.getDepth() + 1);
+			if (canMoveTo(candidate)) {
+				neighbours.add(candidate);
+			}
+		}
+		return neighbours;
+	}
 
 }

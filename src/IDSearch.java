@@ -7,14 +7,6 @@ import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class IDSearch implements Runnable {
-	/* A method called iterativeDeepening that contains the main loop of the
-		iterative deepening algorithm (i.e. the loop that calls depthLimitedSearch
-		repeatedly with increasing depth limits).
-	 * A method called depthLimitedSearch that implements a depth-first graph
-		search with a depth limit.
-	 * A main method to start the program (or the equivalent in your chosen
-		language). */
-
 	private StateSpace problem;
 	private final int[][] grid1 = new int[][] {
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -109,7 +101,8 @@ public class IDSearch implements Runnable {
 	private ArrayDeque<SearchNode> solution = new ArrayDeque<SearchNode>();
 	private List<SearchNode> explored = new ArrayList<SearchNode>();
 	private Queue<String> printQueue;
-	private final int[][][] grids = new int[][][] {grid1,grid2,grid3,grid4,grid5};
+	private final int[][][] grids = new int[][][] { grid1, grid2, grid3, grid4,
+			grid5 };
 
 	public IDSearch(Queue<String> solutionQueue) {
 		this.printQueue = solutionQueue;
@@ -128,8 +121,8 @@ public class IDSearch implements Runnable {
 			return null;
 		}
 
-		for (SearchNode neighbour : n.expand()) {
-			if (problem.canMoveTo(neighbour) && !solution.contains(neighbour)) {
+		for (SearchNode neighbour : problem.expand(n)) {
+			if (!solution.contains(neighbour)) {
 				if (explored.contains(neighbour)) {
 					// The depth isn't part of the searchnode equality
 					final int idx = explored.indexOf(neighbour);
@@ -141,7 +134,8 @@ public class IDSearch implements Runnable {
 					// depth is lower closer to the centre
 					if (previousDistance > currentDistance) {
 						explored.remove(idx);
-						//printQueue.add("Reexploring " + neighbour + "(prev = " + previousDistance + ")");
+						// printQueue.add("Reexploring " + neighbour + "(prev =
+						// " + previousDistance + ")");
 						if (null != recurDepthLimitedSearch(neighbour,
 								depthLimit - 1)) {
 							return solution;
@@ -183,13 +177,14 @@ public class IDSearch implements Runnable {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		
+
 		int grid = 0;
-		if(args.length == 1) {
+		if (args.length == 1) {
 			final String idx = args[0];
-			grid = Integer.parseInt(String.valueOf(idx.charAt(idx.length()-1)));
+			grid = Integer
+					.parseInt(String.valueOf(idx.charAt(idx.length() - 1)));
 		}
-		
+
 		final Queue<String> solutionQueue = new LinkedBlockingQueue<String>();
 		final IDSearch search = new IDSearch(solutionQueue);
 		search.problem = new StateSpace(search.grids[grid]);
@@ -209,7 +204,7 @@ public class IDSearch implements Runnable {
 		t.join();
 
 		System.out.println("Done");
-		
+
 	}
 
 	@Override
